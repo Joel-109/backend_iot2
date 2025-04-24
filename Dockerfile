@@ -30,6 +30,7 @@ COPY --from=builder /app/myapp .
 # Copy any additional files needed at runtime (e.g., SQL files for schema)
 COPY --from=builder /app/query.sql .
 COPY --from=builder /app/schema.sql .
+COPY --from=builder /app/Values.db .
 
 # Expose the port your application will run on (default MQTT port is 1883)
 EXPOSE 1883
