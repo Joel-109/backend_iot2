@@ -30,6 +30,7 @@ import (
 
 	"github.com/eclipse/paho.golang/autopaho"
 	"github.com/eclipse/paho.golang/paho"
+	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -37,12 +38,20 @@ const clientID = "PahoGoClient" // Change this to something random if using a pu
 const topic = "test"
 
 func main() {
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	mqttBrokerUrl := os.Getenv("MQTT_BROKER")
+
 	// App will run until cancelled by user (e.g. ctrl-c)
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
 	// We will connect to the Eclipse test server (note that you may see messages that other users publish)
-	u, err := url.Parse("mqtt://127.0.0.1:1883")
+	u, err := url.Parse(mqttBrokerUrl)
 	if err != nil {
 		panic(err)
 	}
