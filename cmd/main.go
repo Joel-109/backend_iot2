@@ -34,8 +34,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const clientID = "PahoGoClient" // Change this to something random if using a public test server
-const topic = "test"
+// Change this to something random if using a public test server
 
 func main() {
 	err := godotenv.Load()
@@ -45,6 +44,7 @@ func main() {
 	}
 
 	mqttBrokerUrl := os.Getenv("MQTT_BROKER")
+	clientID := os.Getenv("CLIENT_ID")
 
 	// App will run until cancelled by user (e.g. ctrl-c)
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
@@ -82,7 +82,6 @@ func main() {
 			// the connection drops)
 			if _, err := cm.Subscribe(context.Background(), &paho.Subscribe{
 				Subscriptions: []paho.SubscribeOptions{
-					{Topic: topic, QoS: 1},
 					{Topic: "sensors", QoS: 1},
 					{Topic: "risk", QoS: 1},
 					{Topic: "config", QoS: 1},
