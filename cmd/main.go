@@ -51,7 +51,9 @@ func main() {
 	defer stop()
 
 	// We will connect to the Eclipse test server (note that you may see messages that other users publish)
-	u, err := url.Parse(mqttBrokerUrl)
+	fmt.Println(mqttBrokerUrl)
+
+	u, err := url.Parse(mqttBrokerUrl) //mqttBrokerUrl
 	if err != nil {
 		panic(err)
 	}

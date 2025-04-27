@@ -20,8 +20,7 @@ func StartWebServer(ctx context.Context, repo *repository.Queries, mqttClient *a
 	mux.HandleFunc("GET /risk", getRisk(ctx, repo))
 	mux.HandleFunc("GET /risks/{limit}", getRisks(ctx, repo))
 	mux.HandleFunc("POST /config", postConfig(ctx, mqttClient))
-
-	http.ListenAndServe(":8080", mux)
+	http.ListenAndServe(":8080", corsMiddleware(mux))
 }
 
 func getSensorValues(ctx context.Context, repo *repository.Queries) func(w http.ResponseWriter, r *http.Request) {
@@ -148,4 +147,19 @@ func postConfig(ctx context.Context, mqttClient *autopaho.ConnectionManager) fun
 			},
 		)
 	}
+}
+
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
