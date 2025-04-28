@@ -53,7 +53,7 @@ func main() {
 	// We will connect to the Eclipse test server (note that you may see messages that other users publish)
 	fmt.Println(mqttBrokerUrl)
 
-	u, err := url.Parse(mqttBrokerUrl) //mqttBrokerUrl
+	u, err := url.Parse(mqttBrokerUrl)
 	if err != nil {
 		panic(err)
 	}
